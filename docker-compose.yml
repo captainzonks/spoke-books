@@ -1,0 +1,173 @@
+# ==============================================================================
+# BOOKS MODULE - DOCKER COMPOSE
+# ==============================================================================
+# Description: Audiobooks/podcasts media server and ebook library manager
+# Author: Matt Barham
+# Created: 2026-03-15
+# Modified: 2026-03-15
+# Version: 1.0.0
+# Host: Your Server
+# ==============================================================================
+# Component: module: books
+# Config Sources: base.env + .env.example + modules.yml overrides → .env (generated)
+# Security: audiobookshelf runs as user:1000/968 with caps dropped; calibre via PUID/PGID (LSIO)
+# ==============================================================================
+# Container Images:
+#   See modules/books/.env.example for complete image paths and versions
+#   (AUDIOBOOKSHELF_IMAGE, CALIBRE_IMAGE, GRAPHICAUDIO_IMAGE)
+# Volume layout:
+#   ${AUDIOBOOKS_DIR} (/books/) shared by ABS (rw) and Calibre (rw)
+#   Calibre library (metadata.db) lives in /config/ → ${APPDATA_DIR}/calibre/config/
+# Documentation:
+#   - Audiobookshelf: https://www.audiobookshelf.org/docs
+#   - Calibre (LinuxServer): https://docs.linuxserver.io/images/docker-calibre/
+#   - GraphicAudio Scraper: https://github.com/binyaminyblatt/graphicaudio_scraper
+# Networks:
+#   - troxy (192.168.35.0/24) - main application network
+# Dependencies:
+#   - Hub: traefik (routing), authentik (forward auth)
+# External Integrations:
+#   - [x] Traefik routing
+#   - [x] Authentik forward auth
+# ==============================================================================
+
+name: spoke-books
+
+############################ EXTENSIONS
+
+x-ssl: &ssl
+  environment:
+    - SSL_CERT_FILE=${SSL_CERT_FILE}
+    - REQUESTS_CA_BUNDLE=${REQUESTS_CA_BUNDLE}
+    - CURL_CA_BUNDLE=${CURL_CA_BUNDLE}
+
+  volumes:
+    - ${CA_CERT}:/etc/ssl/certs/ca-certificates.crt:ro
+
+x-logging-small: &log_small
+  logging:
+    driver: json-file
+    options:
+      max-size: 10m
+      max-file: "2"
+
+############################ NETWORKS
+
+networks:
+  troxy:
+    external: true
+
+############################# SERVICES
+
+services:
+  #======================================
+  # AUDIOBOOKSHELF - Audiobooks & Podcasts Media Server
+  #======================================
+  audiobookshelf:
+    <<: [*ssl, *log_small]
+    image: ${AUDIOBOOKSHELF_IMAGE}
+    hostname: audiobookshelf
+    container_name: audiobookshelf
+    restart: on-failure
+
+    security_opt:
+      - no-new-privileges=true
+    mem_limit: 2G
+    cpus: 2.0
+    cap_drop:
+      - ALL
+    user: ${PUID}:${DGID}
+
+    networks:
+      troxy:
+        ipv4_address: ${AUDIOBOOKSHELF_IP}
+
+    ports:
+      - ${AUDIOBOOKSHELF_PORT}:80
+
+    environment:
+      - TZ=${TZ}
+
+    volumes:
+      - ${AUDIOBOOKS_DIR}/:/books/:rw
+      - ${PODCASTS_DIR}/:/podcasts/:rw
+      - ${APPDATA_DIR}/audiobookshelf/config/:/config/:rw
+      - ${APPDATA_DIR}/audiobookshelf/metadata/:/metadata/:rw
+      - ${LOCALTIME}:/etc/localtime:ro
+
+  #======================================
+  # CALIBRE - Ebook Library Manager
+  # NOTE: Provides desktop access with passwordless sudo.
+  #       Must be protected by Authentik (see traefik/routers_books.yml).
+  #======================================
+  calibre:
+    <<: [*ssl, *log_small]
+    image: ${CALIBRE_IMAGE}
+    hostname: calibre
+    container_name: calibre
+    restart: on-failure
+
+    security_opt:
+      - no-new-privileges=true
+    mem_limit: 4G
+    cpus: 4.0
+
+    networks:
+      troxy:
+        ipv4_address: ${CALIBRE_IP}
+
+    ports:
+      - ${CALIBRE_PORT}:8080
+
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+
+    environment:
+      - TZ=${TZ}
+      - PUID=${PUID}
+      - PGID=${DGID}
+
+    labels:
+      - sablier.enable=true
+      - sablier.group=calibre
+
+    volumes:
+      - ${APPDATA_DIR}/calibre/config/:/config/:rw
+      - ${AUDIOBOOKS_DIR}/:/books/:rw
+      - ${LOCALTIME}:/etc/localtime:ro
+
+  #======================================
+  # GRAPHICAUDIO - ABS Custom Metadata Scraper
+  # NOTE: Internal API only — no Traefik route, troxy access only.
+  #       Register in ABS: Custom Providers → http://${GRAPHICAUDIO_IP}/audiobookshelf/search?query={query}
+  #======================================
+  graphicaudio:
+    <<: *log_small
+    image: ${GRAPHICAUDIO_IMAGE}
+    hostname: graphicaudio
+    container_name: graphicaudio
+    restart: on-failure
+    build:
+      context: ./dockerfiles/graphicaudio
+      dockerfile: Dockerfile
+
+    security_opt:
+      - no-new-privileges=true
+    mem_limit: 256m
+    cpus: 0.5
+
+    networks:
+      troxy:
+        ipv4_address: ${GRAPHICAUDIO_IP}
+
+    ports:
+      - ${GRAPHICAUDIO_PORT}:80
+
+    environment:
+      - TZ=${TZ}
+      - REFRESH_KEY=${GRAPHICAUDIO_REFRESH_KEY}
+      - AUDIOBOOKSHELF_KEY=${GRAPHICAUDIO_ABS_KEY}

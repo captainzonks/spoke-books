@@ -1,0 +1,19 @@
+http:
+  services:
+    audiobookshelf-svc:
+      loadBalancer:
+        servers:
+          - url: http://audiobookshelf:80
+        healthCheck:
+          path: /
+          interval: 30s
+          timeout: 5s
+
+    calibre-svc:
+      loadBalancer:
+        servers:
+          - url: http://calibre:8080
+        healthCheck:
+          path: /
+          interval: 30s
+          timeout: 5s

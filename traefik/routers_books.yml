@@ -1,0 +1,25 @@
+http:
+  routers:
+    audiobookshelf:
+      rule: Host(`books.{{ env "DOMAIN" }}`)
+      entryPoints: "websecure"
+      middlewares: chain-media@file
+      service: audiobookshelf-svc@file
+
+    calibre:
+      rule: Host(`calibre.{{ env "DOMAIN" }}`)
+      entryPoints: "websecure"
+      middlewares: sablier-calibre@file,chain-authentik-no-crowdsec@file
+      service: calibre-svc@file
+
+  middlewares:
+    sablier-calibre:
+      plugin:
+        sablier:
+          sablierUrl: http://sablier:10000
+          group: calibre
+          sessionDuration: 15m
+          dynamic:
+            displayName: Calibre
+            theme: hacker-terminal
+            refreshFrequency: 5s

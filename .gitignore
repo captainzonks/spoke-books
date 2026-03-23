@@ -1,0 +1,12 @@
+# Generated environment (created by Spoke)
+.env
+
+# Runtime data
+/appdata/
+
+# Editor files
+.DS_Store
+*.swp
+*~
+.idea/
+.vscode/

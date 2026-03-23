@@ -1,0 +1,68 @@
+# ==============================================================================
+# SPOKE-BOOKS - MODULE MANIFEST
+# ==============================================================================
+# Description: Spoke module manifest for Audiobookshelf and Calibre
+# Version: 1.0.0
+# ==============================================================================
+
+name: books
+version: "1.0.0"
+description: "Audiobooks, podcasts, and ebook library services"
+
+############################  REQUIREMENTS
+
+requires:
+  networks:
+    - name: troxy
+      required: true
+  hub_services:
+    - traefik
+
+############################  ENVIRONMENT
+
+env:
+  hub:
+    - TZ
+    - DOMAIN
+    - SPOKE_DIR
+    - SECRETS_DIR
+    - APPDATA_DIR
+    - PUID
+    - DGID
+    - LOCALTIME
+    - INSTANCE_NAME
+    - LOCAL_IPS
+    - CA_CERT
+    - SSL_CERT_FILE
+    - REQUESTS_CA_BUNDLE
+    - CURL_CA_BUNDLE
+
+  module:
+    - AUDIOBOOKSHELF_IMAGE
+    - AUDIOBOOKSHELF_IP
+    - AUDIOBOOKSHELF_PORT
+    - CALIBRE_IMAGE
+    - CALIBRE_IP
+    - CALIBRE_PORT
+    - GRAPHICAUDIO_IMAGE
+    - GRAPHICAUDIO_IP
+    - GRAPHICAUDIO_PORT
+    - GRAPHICAUDIO_REFRESH_KEY
+    - GRAPHICAUDIO_ABS_KEY
+    - MEDIA_DIR
+    - AUDIOBOOKS_DIR
+    - PODCASTS_DIR
+
+############################  SECRETS
+
+############################  HEALTH
+
+health:
+  - service: audiobookshelf
+    port: 80
+  - service: calibre
+    path: /
+    port: 8080
+  - service: graphicaudio
+    path: /
+    port: 80
