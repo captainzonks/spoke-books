@@ -1,5 +1,7 @@
 # spoke-books
 
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/E1E21U3S1R)
+
 Spoke module for book-related media services:
 
 - [Audiobookshelf](https://www.audiobookshelf.org/) — self-hosted audiobook and podcast server
