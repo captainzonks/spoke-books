@@ -38,7 +38,7 @@ docker compose up -d
 
 | Variable               | Default                                   | Description                        |
 |------------------------|-------------------------------------------|------------------------------------|
-| `AUDIOBOOKSHELF_IMAGE` | `ghcr.io/advplyr/audiobookshelf:2.33.0`   | Audiobookshelf container image     |
+| `AUDIOBOOKSHELF_IMAGE` | `ghcr.io/advplyr/audiobookshelf:2.33.2`   | Audiobookshelf container image     |
 | `AUDIOBOOKSHELF_IP`    | `192.168.35.89`                           | Static IP on troxy network         |
 | `AUDIOBOOKSHELF_PORT`  | `13378`                                   | Host port                          |
 | `CALIBRE_IMAGE`        | `lscr.io/linuxserver/calibre:9.5.0`       | Calibre container image            |
