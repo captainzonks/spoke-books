@@ -1,3 +1,19 @@
+# ==============================================================================
+# BOOKS MODULE - GRAPHICAUDIO DOCKERFILE
+# ==============================================================================
+# Description: Custom ABS metadata provider for GraphicAudio titles (PHP/Apache)
+# Author: Matt Barham
+# Created: 2026-03-15
+# Modified: 2026-04-21
+# Version: 1.0.1
+# Host: Your Server
+# ==============================================================================
+# Type: Dockerfile
+# Base Image: php:8.3-apache
+# Documentation: https://github.com/binyaminyblatt/graphicaudio_scraper
+# Component: module: books / service: graphicaudio
+# ==============================================================================
+
 FROM php:8.3-apache
 
 RUN a2enmod rewrite

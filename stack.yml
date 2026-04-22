@@ -1,12 +1,19 @@
 # ==============================================================================
-# SPOKE-BOOKS - MODULE MANIFEST
+# BOOKS MODULE - STACK MANIFEST
 # ==============================================================================
-# Description: Spoke module manifest for Audiobookshelf and Calibre
-# Version: 1.0.0
+# Description: Spoke module manifest for Audiobookshelf, Calibre, GraphicAudio
+# Author: Matt Barham
+# Created: 2026-03-15
+# Modified: 2026-04-21
+# Version: 1.0.1
+# Host: Your Server
+# ==============================================================================
+# Type: Spoke Module Manifest
+# Component: module: books
 # ==============================================================================
 
 name: books
-version: "1.0.0"
+version: "1.0.1"
 description: "Audiobooks, podcasts, and ebook library services"
 
 ############################  REQUIREMENTS

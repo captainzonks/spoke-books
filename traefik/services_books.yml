@@ -1,3 +1,21 @@
+# ==============================================================================
+# BOOKS MODULE - TRAEFIK SERVICES
+# ==============================================================================
+# Description: Load balancer service configurations for books module services
+# Author: Matt Barham
+# Created: 2026-03-15
+# Modified: 2026-04-21
+# Version: 1.0.1
+# Host: Your Server
+# ==============================================================================
+# Type: Traefik Dynamic Config (services)
+# Component: module: books
+# Deployed by Spoke as: mod_books_services_books.yml
+# Dependencies:
+#   - Container services must be running and accessible
+#   - Docker networks: troxy (defined in compose files)
+# ==============================================================================
+
 http:
   services:
     audiobookshelf-svc:
