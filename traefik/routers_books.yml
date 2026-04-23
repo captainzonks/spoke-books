@@ -1,3 +1,22 @@
+# ==============================================================================
+# BOOKS MODULE - TRAEFIK ROUTERS
+# ==============================================================================
+# Description: HTTP routing rules for books module services
+# Author: Matt Barham
+# Created: 2026-03-15
+# Modified: 2026-04-21
+# Version: 1.0.1
+# Host: Your Server
+# ==============================================================================
+# Type: Traefik Dynamic Config (routers)
+# Component: module: books
+# Deployed by Spoke as: mod_books_routers_books.yml
+# Dependencies:
+#   - mod_books_services_books.yml (service definitions)
+#   - hub middlewares (middleware chains)
+#   - Environment variable: DOMAIN
+# ==============================================================================
+
 http:
   routers:
     audiobookshelf:
