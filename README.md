@@ -7,8 +7,8 @@ README.md - spoke-books module documentation
 Description: Audiobookshelf, Calibre, and GraphicAudio scraper Spoke module
 Author: Matt Barham
 Created: 2026-03-15
-Modified: 2026-04-21
-Version: 1.0.1
+Modified: 2026-05-14
+Version: 1.0.2
 ==============================================================================
 Document Type: Reference
 Audience: Developer
@@ -54,7 +54,7 @@ docker compose up -d
 
 | Variable               | Default                                   | Description                        |
 |------------------------|-------------------------------------------|------------------------------------|
-| `AUDIOBOOKSHELF_IMAGE` | `ghcr.io/advplyr/audiobookshelf:2.33.2`   | Audiobookshelf container image     |
+| `AUDIOBOOKSHELF_IMAGE` | `ghcr.io/advplyr/audiobookshelf:2.34.0`   | Audiobookshelf container image     |
 | `AUDIOBOOKSHELF_IP`    | `192.168.35.89`                           | Static IP on troxy network         |
 | `AUDIOBOOKSHELF_PORT`  | `13378`                                   | Host port                          |
 | `CALIBRE_IMAGE`        | `lscr.io/linuxserver/calibre:9.7.0`       | Calibre container image            |
