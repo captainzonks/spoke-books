@@ -57,6 +57,12 @@ networks:
   troxy:
     external: true
 
+############################# SECRETS
+
+secrets:
+  graphicaudio_refresh_key:
+    file: ${SECRETS_DIR}/books/graphicaudio_refresh_key
+
 ############################# SERVICES
 
 services:
@@ -169,5 +175,8 @@ services:
 
     environment:
       - TZ=${TZ}
-      - REFRESH_KEY=${GRAPHICAUDIO_REFRESH_KEY}
+      - REFRESH_KEY_FILE=/run/secrets/graphicaudio_refresh_key
       - AUDIOBOOKSHELF_KEY=${GRAPHICAUDIO_ABS_KEY}
+
+    secrets:
+      - graphicaudio_refresh_key

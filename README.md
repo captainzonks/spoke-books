@@ -66,7 +66,6 @@ docker compose up -d
 | `GRAPHICAUDIO_IMAGE`   | `spoke-books/graphicaudio:latest`         | GraphicAudio scraper image (local build)   |
 | `GRAPHICAUDIO_IP`      | `192.168.35.91`                           | Static IP on troxy network                 |
 | `GRAPHICAUDIO_PORT`    | `8093`                                    | Host port                                  |
-| `GRAPHICAUDIO_REFRESH_KEY` | `changeme`                            | Secret key to protect the `/refresh` endpoint |
 | `GRAPHICAUDIO_ABS_KEY` | `abs`                                     | ABS API key for cover art (leave `abs` if ABS auth is off) |
 
 ## Traefik Routing
@@ -94,7 +93,7 @@ The scraper is a custom PHP build that fetches `results.json` from the upstream 
 
 **Cache refresh** (POST to protected endpoint):
 ```bash
-curl -X POST http://<GRAPHICAUDIO_IP>/refresh -H "X-Refresh-Key: <GRAPHICAUDIO_REFRESH_KEY>"
+curl -X POST http://<GRAPHICAUDIO_IP>/refresh -H "X-Refresh-Key: $(cat ${SECRETS_DIR}/books/graphicaudio_refresh_key)"
 ```
 
 **Build**: Image is built locally from `dockerfiles/graphicaudio/Dockerfile` on first deploy (`docker compose up -d --build`).

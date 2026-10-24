@@ -54,13 +54,17 @@ env:
     - GRAPHICAUDIO_IMAGE
     - GRAPHICAUDIO_IP
     - GRAPHICAUDIO_PORT
-    - GRAPHICAUDIO_REFRESH_KEY
     - GRAPHICAUDIO_ABS_KEY
     - MEDIA_DIR
     - AUDIOBOOKS_DIR
     - PODCASTS_DIR
 
 ############################  SECRETS
+
+secrets:
+  - name: graphicaudio_refresh_key
+    path: books/graphicaudio_refresh_key
+    required: true
 
 ############################  HEALTH
 
