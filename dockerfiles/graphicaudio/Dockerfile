@@ -4,8 +4,8 @@
 # Description: Custom ABS metadata provider for GraphicAudio titles (PHP/Apache)
 # Author: Matt Barham
 # Created: 2026-03-15
-# Modified: 2026-04-21
-# Version: 1.0.1
+# Modified: 2026-10-24
+# Version: 1.0.2
 # Host: Your Server
 # ==============================================================================
 # Type: Dockerfile
@@ -39,3 +39,10 @@ RUN sed -i "s|define('REFRESH_KEY', '.*');|define('REFRESH_KEY', getenv('REFRESH
 
 RUN mkdir -p /var/www/html/covers \
     && chown -R www-data:www-data /var/www/html
+
+# Docker secrets support: REFRESH_KEY_FILE / AUDIOBOOKSHELF_KEY_FILE -> env vars
+COPY graphicaudio_entrypoint.sh /usr/local/bin/graphicaudio_entrypoint.sh
+RUN chmod 755 /usr/local/bin/graphicaudio_entrypoint.sh
+
+ENTRYPOINT ["/usr/local/bin/graphicaudio_entrypoint.sh"]
+CMD ["apache2-foreground"]
